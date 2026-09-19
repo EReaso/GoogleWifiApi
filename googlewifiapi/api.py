@@ -30,7 +30,7 @@ class GoogleWifiAPI:
         self._resource = URL(f"http://{host}{ENDPOINT}")
         self.sess = sess or aiohttp.ClientSession()
 
-    async def async_update(self) -> None:
+    async def async_update(self) -> GoogleWifiStatus:
         """Get the latest data from the router."""
         try:
             resp = await self.sess.get(self._resource)
@@ -47,6 +47,7 @@ class GoogleWifiAPI:
         self.raw_data = raw_data
         try:
             self.data = GoogleWifiStatus.from_dict(raw_data)
+            return self.data
         except (LookupError, TypeError, ValueError) as err:
             raise GoogleWifiDataValidationError(
                 f"The router provided data that could not be validated. "
