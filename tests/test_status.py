@@ -58,13 +58,11 @@ class TestApiUpdate:
     @pytest.mark.asyncio
     async def test_async_update_success(
         self,
-        mock_aioresponse: aioresponses,
+        mock_success: aioresponses,
         client: GoogleWifiAPI,
         normal_response: dict[str, Any],
     ) -> None:
         """Test that a normal response updates the client's data correctly."""
-        mock_aioresponse.get(RESOURCE_URL, status=200, payload=normal_response)
-
         await client.async_update()
 
         assert client.raw_data == normal_response
@@ -111,14 +109,9 @@ class TestApiUpdate:
 
     @pytest.mark.asyncio
     async def test_async_update_connection_error_raises_client_error(
-        self, mock_aioresponse: aioresponses, client: "GoogleWifiAPI"
+        self, mock_unreachable: aioresponses, client: "GoogleWifiAPI"
     ) -> None:
         """Test that a connection failure raises a client error."""
-        mock_aioresponse.get(
-            RESOURCE_URL,
-            exception=aiohttp.ClientConnectionError("connection refused"),
-        )
-
         with pytest.raises(GoogleWifiClientError):
             await client.async_update()
 
@@ -138,13 +131,10 @@ class TestApiUpdate:
     @pytest.mark.asyncio
     async def test_async_update_unexpected_error_raises_generic_exception(
         self,
-        mock_aioresponse: aioresponses,
+        mock_success: aioresponses,
         client: GoogleWifiAPI,
-        normal_response: dict[str, Any],
     ) -> None:
         """Test that an unexpected failure in schema parsing raises the generic exception."""
-        mock_aioresponse.get(RESOURCE_URL, status=200, payload=normal_response)
-
         with (
             patch(
                 "googlewifiapi.status.GoogleWifiStatus.from_dict",
