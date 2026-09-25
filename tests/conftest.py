@@ -51,7 +51,7 @@ async def mock_unreachable(mock_aioresponse: aioresponses) -> aioresponses:
     return mock_aioresponse
 
 
-@pytest.fixture()
+@pytest.fixture
 def normal_response() -> dict[str, Any]:
     """Return a normal response from the API."""
     return {
