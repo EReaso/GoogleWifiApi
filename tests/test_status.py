@@ -20,7 +20,7 @@ from .conftest import RESOURCE_URL
 
 
 def test_schema_validation(normal_response: dict[str, Any]) -> None:
-    """Test that the GoogleWifiStatus schema validates sample data from a normal response correctly."""
+    """Test that GoogleWifiStatus validates sample data correctly."""
     status = GoogleWifiStatus.from_dict(normal_response)
 
     assert status.dns.mode == "automatic"
@@ -29,27 +29,50 @@ def test_schema_validation(normal_response: dict[str, Any]) -> None:
         IPv4Address("75.75.76.76"),
     ]
 
+    assert status.setup_state == "GWIFI_OOBE_COMPLETE"
+
+    assert status.software.blocking_update == 1
     assert status.software.software_version == "softwareVersion"
-    assert status.software.update_status == "idle"
-    assert status.software.update_required is False
+    assert status.software.update_channel == "stable-channel"
+    assert status.software.update_new_version == "0.0.0.0"
     assert status.software.update_progress == 0.0
+    assert status.software.update_required is False
+    assert status.software.update_status == "idle"
 
     assert status.system.country_code == "us"
     assert isinstance(status.system.country_code, str)
+    assert status.system.group_role == "root"
+    assert status.system.hardware_id == "GALE [REDACTED]"
+    assert status.system.lan0_link is False
+    assert status.system.led_animation == "CONNECTED"
+    assert status.system.led_intensity == 6
     assert status.system.model_id == "modelId"
+    assert (
+        status.system.oobe_detailed_status
+        == "JOIN_AND_REGISTRATION_STAGE_DEVICE_ONLINE"
+    )
     assert status.system.uptime == 3600
     assert status.system.last_restart is not None
 
-    assert status.wan.online is True
+    assert status.vorlon_info.migration_mode == "voobed"
+
+    assert status.wan.captive_portal is False
     assert status.wan.ethernet_link is True
     assert status.wan.gateway_ip_address == IPv4Address("10.0.0.1")
-    assert status.wan.local_ip_address == IPv4Address("10.0.0.10")
+    assert status.wan.invalid_credentials is False
+    assert status.wan.ip_address is True
     assert status.wan.ip_method == "dhcp"
     assert status.wan.ip_prefix_length == 24
+    assert status.wan.lease_duration_seconds == 1
+    assert status.wan.local_ip_address == IPv4Address("10.0.0.10")
     assert status.wan.name_servers == [
         IPv4Address("75.75.75.75"),
         IPv4Address("75.75.76.76"),
     ]
+    assert status.wan.online is True
+    assert status.wan.pppoe_detected is False
+    assert status.wan.vlan_scan_attempt_count == 0
+    assert status.wan.vlan_scan_complete is True
 
 
 class TestApiUpdate:
@@ -134,7 +157,7 @@ class TestApiUpdate:
         mock_success: aioresponses,
         client: GoogleWifiAPI,
     ) -> None:
-        """Test that an unexpected failure in schema parsing raises the generic exception."""
+        """Test unexpected schema parsing failure raises generic exception."""
         with (
             patch(
                 "googlewifiapi.status.GoogleWifiStatus.from_dict",
