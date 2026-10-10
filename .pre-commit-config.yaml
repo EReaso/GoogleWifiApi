@@ -17,4 +17,5 @@ repos:
     rev: v1.14.0
     hooks:
       - id: mypy
-        additional_dependencies: ["aiohttp"]
+        additional_dependencies:
+          ["aiohttp", "mashumaro", "pytest", "pytest-asyncio", "aioresponses"]
