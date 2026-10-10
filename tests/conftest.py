@@ -37,14 +37,14 @@ async def client(session: aiohttp.ClientSession) -> AsyncGenerator[GoogleWifiAPI
 async def mock_success(
     mock_aioresponse: aioresponses, normal_response: dict[str, Any]
 ) -> aioresponses:
-    """Activate aioresponses for the duration of a test and mock a successful response."""
+    """Mock a successful API response."""
     mock_aioresponse.get(RESOURCE_URL, status=200, payload=normal_response)
     return mock_aioresponse
 
 
 @pytest.fixture
 async def mock_unreachable(mock_aioresponse: aioresponses) -> aioresponses:
-    """Activate aioresponses for the duration of a test and mock an unreachable response."""
+    """Mock an unreachable API response."""
     mock_aioresponse.get(
         RESOURCE_URL, exception=aiohttp.ClientConnectionError("connection refused")
     )

@@ -1,3 +1,5 @@
+"""Google Wifi API asynchronous Python wrapper."""
+
 from .api import GoogleWifiAPI
 from .const import LOGGER
 from .status import GoogleWifiStatus
