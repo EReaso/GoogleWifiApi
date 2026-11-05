@@ -87,6 +87,33 @@ def test_schema_validation_dns_modes(
     assert status.dns.mode == mode
 
 
+def test_schema_validation_offline_wan(normal_response: dict[str, Any]) -> None:
+    """Test that a mesh point without WAN details is accepted."""
+    response = {
+        **normal_response,
+        "wan": {
+            "captivePortal": False,
+            "ethernetLink": False,
+            "invalidCredentials": False,
+            "ipAddress": False,
+            "online": False,
+            "pppoeDetected": False,
+            "vlanScanAttemptCount": 0,
+            "vlanScanComplete": False,
+        },
+    }
+
+    status = GoogleWifiStatus.from_dict(response)
+
+    assert status.wan.online is False
+    assert status.wan.gateway_ip_address is None
+    assert status.wan.ip_method is None
+    assert status.wan.ip_prefix_length is None
+    assert status.wan.lease_duration_seconds is None
+    assert status.wan.local_ip_address is None
+    assert status.wan.name_servers is None
+
+
 class TestApiUpdate:
     """Tests whether the API wrapper can update with different conditions."""
 

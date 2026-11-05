@@ -120,20 +120,20 @@ class GoogleWifiStatus(DataClassDictMixin):
                 "migration_mode": "migrationMode",
             }
 
-    @dataclass(frozen=True)
+    @dataclass(frozen=True, kw_only=True)
     class WAN(DataClassDictMixin):
         """WAN status."""
 
         captive_portal: bool
         ethernet_link: bool
-        gateway_ip_address: IPAddress
+        gateway_ip_address: IPAddress | None = None
         invalid_credentials: bool
         ip_address: bool
-        ip_method: str
-        ip_prefix_length: int
-        lease_duration_seconds: int
-        local_ip_address: IPAddress
-        name_servers: list[IPAddress]
+        ip_method: str | None = None
+        ip_prefix_length: int | None = None
+        lease_duration_seconds: int | None = None
+        local_ip_address: IPAddress | None = None
+        name_servers: list[IPAddress] | None = None
         online: bool
         pppoe_detected: bool
         vlan_scan_attempt_count: int
