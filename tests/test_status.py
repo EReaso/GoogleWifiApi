@@ -75,6 +75,18 @@ def test_schema_validation(normal_response: dict[str, Any]) -> None:
     assert status.wan.vlan_scan_complete is True
 
 
+@pytest.mark.parametrize("mode", ["automatic", "custom", "dhcp"])
+def test_schema_validation_dns_modes(
+    normal_response: dict[str, Any], mode: str
+) -> None:
+    """Test that all DNS modes reported by routers are accepted."""
+    response = {**normal_response, "dns": {**normal_response["dns"], "mode": mode}}
+
+    status = GoogleWifiStatus.from_dict(response)
+
+    assert status.dns.mode == mode
+
+
 class TestApiUpdate:
     """Tests whether the API wrapper can update with different conditions."""
 

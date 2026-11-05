@@ -3,7 +3,7 @@
 import ipaddress
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
-from typing import Literal, Union
+from typing import Union
 
 from mashumaro import DataClassDictMixin
 from mashumaro.config import BaseConfig
@@ -36,7 +36,7 @@ class GoogleWifiStatus(DataClassDictMixin):
     class DNS(DataClassDictMixin):
         """DNS status."""
 
-        mode: Literal["automatic", "custom"]
+        mode: str
         servers: list[IPAddress]
 
     @dataclass(frozen=True)
